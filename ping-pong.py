@@ -35,12 +35,33 @@ run = True
 ball =GameSprite('ball.png',200,200,10,60,60)
 player1 = Player('line.png', 0,200,10,30,100)
 player2 = Player('line.png', 570,200,10,30,100)
+speed_x = 3
+speed_y = 3
+font.init()
+font1 = font.Font(None, 35)
+lose1 = font1.render('PLAYER 1 LOSE!', True, (180, 0, 0))
+lose2 = font1.render('PLAYER 2 LOSE!', True, (180, 0, 0))
+finish = False
 while run:
     for e in event.get():
         if e.type == QUIT:
-            run = False
-    
+            run = False    
     window.blit(background, (0, 0))
+    if finish != True:
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
+    if ball.rect.y > win_height-50 or ball.rect.y < 0:
+            speed_y *= -1
+    if sprite.collide_rect(player1, ball) or sprite.collide_rect(player2, ball):
+            speed_x *= -1
+    if ball.rect.x < 0:
+        finish = True
+        window.blit(lose1, (200,200))
+    if ball.rect.x > win_width-50:
+        finish = True
+        window.blit(lose2, (200,200))
+    
+
     player1.update_l()
     player1.reset()
     player2.update_r()
@@ -48,3 +69,4 @@ while run:
     ball.reset()
     display.update()
     time.delay(50)
+
